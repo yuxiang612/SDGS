@@ -1,61 +1,48 @@
 
 body {
-    background: linear-gradient(135deg, #89f7fe, #66a6ff);
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
+  background: linear-gradient(to right, #74ebd5, #ACB6E5);
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 .box {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 20px;
-    background: rgba(176, 117, 231, 0.8);
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-.grid-box {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 20px;
-    justify-content: center;
-    max-width: 900px;
-    margin: 20px auto;
-}
-.sdg-item {
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    text-align: center;
-}
-.sdg-item img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-}
-.sdg-item:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  background-color: #a685e2;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 800px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
 button {
-    padding: 10px 15px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 button:hover {
-    background: #0056b3;
-    transform: scale(1.1);
+  background-color: #0056b3;
+}
+.grid-box {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  justify-items: center;
+}
+.sdg-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 .modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  background: white;
+  padding: 15px;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
 }
