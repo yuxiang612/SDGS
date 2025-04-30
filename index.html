@@ -2,145 +2,33 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SDGS 關鍵字管理</title>
   <link rel="stylesheet" href="1234.css" />
 </head>
 <body>
-  <div class="box" id="main-box">
+  <div class="box">
     <h1>🌎 SDGS 關鍵字管理</h1>
-    <input type="text" id="search-input" placeholder="輸入關鍵字" />
-    <button onclick="searchSDG()">🔍 搜尋</button>
-    <p id="search-result"></p>
-    <div class="sdgs" id="sdgs-box"><div class="grid-box" id="grid-box"></div></div>
-    <button onclick="openManageModal()">⚙️ 管理 SDGS 關鍵字</button>
-  </div>
-
-  <div id="sdg-modal" class="modal" style="display:none;">
-    <h2 id="modal-title"></h2><ul id="modal-content"></ul>
-    <button onclick="closeSdgModal()">關閉</button>
-  </div>
-
-  <div id="manage-modal" class="modal" style="display:none;">
-    <h2>管理 SDGS 關鍵字</h2>
-    <label for="sdg-select">選擇 SDGS 目標：</label>
-    <select id="sdg-select" onchange="populateDeleteOptions()"></select>
-    <textarea id="global-input" placeholder="每行一筆關鍵字"></textarea>
+    <textarea id="global-input" placeholder="每行一筆關鍵字"></textarea><br />
+    <select id="sdg-select">
+      <option value="1">SDG 1</option><option value="2">SDG 2</option>
+      <option value="3">SDG 3</option><option value="4">SDG 4</option>
+    </select>
     <button onclick="saveData()">儲存</button>
-    <h3>刪除關鍵字</h3>
-    <select id="delete-select"></select>
-    <button onclick="deleteSelectedData()">刪除選取數據</button>
-    <button onclick="closeManageModal()">關閉</button>
+    <p id="msg"></p>
   </div>
-
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxSUfZyQEWx2D8n10F92YvoOdOcyBZgBcMqb1ogcNStdmJcnp1ymKLhGz25Tt-0Bwxw/exec";
-    let allData = [];
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      loadSDGS();
-      await fetchAllData();
-      populateSDGSOptions();
-    });
-
-    async function fetchAllData() {
-      const res = await fetch(API_URL);
-      allData = await res.json();
-    }
-
-    function loadSDGS() {
-      const gridBox = document.getElementById("grid-box");
-      gridBox.innerHTML = "";
-      for (let i = 1; i <= 18; i++) {
-        const div = document.createElement("div");
-        div.classList.add("sdg-item");
-        div.id = `sdg-${i}`;
-        div.onclick = () => showData(i);
-        div.innerHTML = `<img src="1234/sdgs${i}.jpg" alt="SDGS ${i}" width="100"><p>SDGS ${i}</p>`;
-        gridBox.appendChild(div);
-      }
-    }
-
-    function showData(sdgNum) {
-      document.getElementById("modal-title").textContent = `SDGS ${sdgNum} 關鍵字`;
-      const modalContent = document.getElementById("modal-content");
-      const matched = allData.filter(row => String(row[0]) === String(sdgNum));
-      modalContent.innerHTML = matched.length ? matched.map(row => `<li>${row[1]}</li>`).join("") : "<p>沒有關鍵字資料</p>";
-      document.getElementById("sdg-modal").style.display = "block";
-    }
-
-    function searchSDG() {
-      const query = document.getElementById("search-input").value.trim();
-      if (!query) {
-        document.getElementById("search-result").textContent = "請輸入關鍵字！";
-        return;
-      }
-      const result = allData.filter(row => row[1].includes(query)).map(row => `SDGS ${row[0]}`);
-      const unique = [...new Set(result)];
-      document.getElementById("search-result").textContent = unique.length
-        ? `關鍵字對應的 SDGS 目標: ${unique.join(", ")}`
-        : "未找到相關 SDGS 目標";
-    }
-
-    function populateSDGSOptions() {
-      const select = document.getElementById("sdg-select");
-      select.innerHTML = '';
-      for (let i = 1; i <= 18; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `SDGS ${i}`;
-        select.appendChild(option);
-      }
-      populateDeleteOptions();
-    }
-
-    function populateDeleteOptions() {
-      const sdgNum = document.getElementById("sdg-select").value;
-      const deleteSelect = document.getElementById("delete-select");
-      deleteSelect.innerHTML = '';
-      const matched = allData.filter(row => String(row[0]) === String(sdgNum));
-      matched.forEach(row => {
-        const option = document.createElement('option');
-        option.value = row[1];
-        option.textContent = row[1];
-        deleteSelect.appendChild(option);
-      });
-    }
-
     async function saveData() {
-      const sdgNum = document.getElementById("sdg-select").value;
-      if (!sdgNum) {
-        alert("請先選擇一個 SDGS 目標！");
-        return;
-      }
-      const inputData = document.getElementById("global-input").value.trim().split('\n').filter(d => d);
-      for (let keyword of inputData) {
+      const sdg = document.getElementById('sdg-select').value;
+      const lines = document.getElementById('global-input').value.trim().split('\n').filter(Boolean);
+      for (const keyword of lines) {
         await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `sdg=${sdgNum}&keyword=${encodeURIComponent(keyword)}`
+          body: `sdg=${sdg}&keyword=${encodeURIComponent(keyword)}`
         });
       }
-      alert("儲存成功！");
-      await fetchAllData();
-      populateDeleteOptions();
-    }
-
-    function deleteSelectedData() {
-      alert("目前不支援刪除功能");
-    }
-
-    function openManageModal() {
-      document.getElementById("manage-modal").style.display = "block";
-      populateSDGSOptions();
-    }
-
-    function closeManageModal() {
-      document.getElementById("manage-modal").style.display = "none";
-    }
-
-    function closeSdgModal() {
-      document.getElementById("sdg-modal").style.display = "none";
+      document.getElementById('msg').textContent = "✅ 資料已送出！請查看 Google Sheet";
     }
   </script>
 </body>
