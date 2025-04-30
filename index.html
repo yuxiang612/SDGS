@@ -113,7 +113,12 @@
 
     async function saveData() {
       const sdgNum = document.getElementById("sdg-select").value;
-      const inputData = document.getElementById("global-input").value.trim().split('\n').filter(d => d);
+      if (!sdgNum) {
+        alert("請先選擇一個 SDGS 目標！");
+        return;
+      }
+      const inputData = document.getElementById("global-input").value.trim().split('
+').filter(d => d);
       for (let keyword of inputData) {
         await fetch(API_URL, {
           method: 'POST',
